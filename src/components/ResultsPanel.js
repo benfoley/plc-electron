@@ -16,27 +16,45 @@ const ResultsPanel = () => {
         setSelectedIndex(index);
     };
 
+    const results = [
+        {name: "file1.pdf", download: true},
+        {name: "file2.pdf", download: false},
+        {name: "file3.pdf", download: true},
+        {name: "file4.pdf", download: false},
+        {name: "file5.pdf", download: true},
+    ];
+    const can = results.filter((result) => result.download);
+
     return <div class="results">
     <Box sx={{
         bgcolor: 'background.paper',
         height: 400
         }}>
-      <List component="nav" aria-label="main mailbox folders">
-        <ListItemButton
-          selected={selectedIndex === 0}
-          onClick={(event) => handleListItemClick(event, 0)}
-        >
-          <ListItemText primary="Inbox" />
-        </ListItemButton>
+      <List component="nav">
+        {can.map((result, index) => {
+            return (
+                <ListItemButton
+                    selected={selectedIndex === index}
+                    onClick={(event) => handleListItemClick(event, index)}
+                    >
+                    <ListItemText primary={result.name} />
+                </ListItemButton>
+            )
+        })}
       </List>
       <Divider />
-      <List component="nav" aria-label="secondary mailbox folder">
-        <ListItemButton
-          selected={selectedIndex === 2}
-          onClick={(event) => handleListItemClick(event, 2)}
-        >
-          <ListItemText primary="Trash" />
-        </ListItemButton>
+      <List component="nav">
+        {results.filter((result) => !result.download).map((result, index) => {
+            const listIndex = can.length + index;
+            return (
+                <ListItemButton
+                    selected={selectedIndex === listIndex}
+                    onClick={(event) => handleListItemClick(event, listIndex)}
+                    >
+                    <ListItemText primary={result.name} />
+                </ListItemButton>
+            )
+        })}
       </List>
     </Box>
     </div>
