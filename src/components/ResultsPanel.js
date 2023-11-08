@@ -25,39 +25,40 @@ const ResultsPanel = () => {
     ];
     const can = results.filter((result) => result.download);
 
-    return <div class="results">
-    <Box sx={{
-        bgcolor: 'background.paper',
-        height: 400
-        }}>
-      <List component="nav">
-        {can.map((result, index) => {
-            return (
-                <ListItemButton
-                    selected={selectedIndex === index}
-                    onClick={(event) => handleListItemClick(event, index)}
-                    >
-                    <ListItemText primary={result.name} />
-                </ListItemButton>
-            )
-        })}
-      </List>
-      <Divider />
-      <List component="nav">
-        {results.filter((result) => !result.download).map((result, index) => {
-            const listIndex = can.length + index;
-            return (
-                <ListItemButton
-                    selected={selectedIndex === listIndex}
-                    onClick={(event) => handleListItemClick(event, listIndex)}
-                    >
-                    <ListItemText primary={result.name} />
-                </ListItemButton>
-            )
-        })}
-      </List>
-    </Box>
-    </div>
+    return (<div className="results">
+        <Box sx={{
+            bgcolor: 'background.paper',
+            height: 400
+            }}>
+        <List component="nav">
+            {can.map((result, index) => {
+                return (
+                    <ListItemButton
+                        key={result.name}
+                        selected={selectedIndex === index}
+                        onClick={(event) => handleListItemClick(event, index)}
+                        >
+                        <ListItemText primary={result.name} />
+                    </ListItemButton>
+                )
+            })}
+        </List>
+        <Divider />
+        <List component="nav">
+            {results.filter((result) => !result.download).map((result, index) => {
+                const listIndex = can.length + index;
+                return (
+                    <ListItemButton
+                        selected={selectedIndex === listIndex}
+                        onClick={(event) => handleListItemClick(event, listIndex)}
+                        >
+                        <ListItemText primary={result.name} />
+                    </ListItemButton>
+                )
+            })}
+        </List>
+        </Box>
+    </div>);
 }
 
 
