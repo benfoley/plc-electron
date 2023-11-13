@@ -22,11 +22,6 @@ function App() {
 
     // componentDidMount
     useEffect(logOut, []);
-    // useEffect(() => {
-    //     fetch('/time').then(res => res.json()).then(data => {
-    //       setCurrentTime(data.time);
-    //     });
-    //   }, []);
 
     // componentDidUpdate(dependency)
     useEffect(() => {
@@ -48,9 +43,9 @@ function App() {
         <header className="App-header">
           <SearchBar />
         </header>
-        {profile ? (
+        {profile && profile.name ? (
             <div>
-                {/* <img src={profile.picture} alt="user image" /> */}
+                <img src={profile.picture} alt="user image" />
                 <h3>User Logged in</h3>
                 <p>Name: {profile.name}</p>
                 <p>Email Address: {profile.email}</p>
@@ -59,7 +54,7 @@ function App() {
                 <button onClick={logOut}>Log out</button>
             </div>
         ) : (
-            <button onClick={() => login()}>Sign in with Google 🚀 </button>
+            <button onClick={() => login()}>Sign in with Google</button>
         )}
 
         <ResultsPanel />

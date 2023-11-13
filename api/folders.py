@@ -100,7 +100,8 @@ def search_for_file(query: str, dbx, local_path: str, bucket_name: str, index_lo
     storage_client = storage.Client()
     blobs = storage_client.list_blobs(bucket_name)
     archive_matches = search_blobs(blobs, query)
-    return [local, dbx_matches, archive_matches]
+    # return [local, dbx_matches, archive_matches]
+    return local + dbx_matches + archive_matches
 
 def translate_query(query: str, index_location: str) -> Tuple[List[str], List[str], List[str]]:
     include, exclude, optional = parse_query(query)

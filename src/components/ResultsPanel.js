@@ -1,6 +1,6 @@
 import './ResultsPanel.css';
 
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     List,
@@ -10,20 +10,20 @@ import {
 } from '@mui/material';
 
 const ResultsPanel = () => {
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [results, setResults] = useState([]);
 
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
     };
 
-    const results = [
-        {name: "file1.pdf", download: true},
-        {name: "file2.pdf", download: false},
-        {name: "file3.pdf", download: true},
-        {name: "file4.pdf", download: false},
-        {name: "file5.pdf", download: true},
-    ];
-    const can = results.filter((result) => result.download);
+    useEffect(() => {
+        fetch("/get_all_files").then(res => res.json()).then(data => {
+            console.log(data.results);
+            console.log(typeof data.results)
+            setResults(data.results);
+        });
+    }, [])
 
     return (<div className="results">
         <Box sx={{
@@ -31,19 +31,20 @@ const ResultsPanel = () => {
             height: 400
             }}>
         <List component="nav">
-            {can.map((result, index) => {
+            {results.map((result, index) => {
                 return (
                     <ListItemButton
-                        key={result.name}
+                        key={result}
                         selected={selectedIndex === index}
                         onClick={(event) => handleListItemClick(event, index)}
                         >
-                        <ListItemText primary={result.name} />
+                        <ListItemText primary={result} />
                     </ListItemButton>
+                    // <div></div>
                 )
             })}
         </List>
-        <Divider />
+        {/* <Divider />
         <List component="nav">
             {results.filter((result) => !result.download).map((result, index) => {
                 const listIndex = can.length + index;
@@ -56,7 +57,7 @@ const ResultsPanel = () => {
                     </ListItemButton>
                 )
             })}
-        </List>
+        </List> */}
         </Box>
     </div>);
 }

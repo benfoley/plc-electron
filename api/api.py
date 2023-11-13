@@ -12,3 +12,7 @@ app = Flask(__name__)
 def get_all_files():
     dbx = get_dropbox(os.getenv("APP_KEY"), os.getenv("REFRESH_TOKEN"))
     ls = search_for_file("", dbx, "./files", buckets["ANNUAL"])
+    
+    return {
+        'results': ls
+    }
