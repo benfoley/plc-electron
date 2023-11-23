@@ -3,6 +3,7 @@ import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import ResultsPanel from './components/ResultsPanel';
+import SearchArea from './components/SearchArea';
 
 // https://blog.logrocket.com/guide-adding-google-login-react-app/
 
@@ -40,7 +41,8 @@ function App() {
 
     return (
       <div className="App">
-        <header className="App-header">
+        <SearchArea />
+        {/* <header className="App-header">
           <SearchBar />
         </header>
         {profile && profile.name ? (
@@ -57,7 +59,7 @@ function App() {
             <button onClick={() => login()}>Sign in with Google</button>
         )}
 
-        <ResultsPanel />
+        <ResultsPanel /> */}
       </div>
     );
 }
