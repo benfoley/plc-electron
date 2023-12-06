@@ -9,9 +9,15 @@ import {
     ListItemText
 } from '@mui/material';
 
-const ResultsPanel = ({ results, handleListItemClick, selectedIndex }) => {
+const ResultsPanel = ({ results, handleResultClick }) => {
     const [ children, setChildren ] = useState([]);
+    const [ selectedIndex, setSelectedIndex ] = useState(0);
     var temp = [];
+
+    const handleListItemClick = (event, index) => {
+        setSelectedIndex(index);
+        handleResultClick(event, index);
+    }
 
     const addChildren = (list, startIndex, noResultsMessage) => {
         if (list.length > 0) {
@@ -47,7 +53,13 @@ const ResultsPanel = ({ results, handleListItemClick, selectedIndex }) => {
         if (!(Array.isArray(results)) || results.length !== 3
             || results.some((sublist) => {return !Array.isArray(sublist)})) {
             console.log("error retrieving results");
-            temp = [<h2>Error retrieving results</h2>];
+            temp = [(
+                <List component="nav">
+                    <ListItemButton key="error" selected={ false }>
+                        <ListItemText primary="Error retrieving results" />
+                    </ListItemButton>
+                </List>
+            )];
         } else {
             console.log("checks okay");
             const [ local, dropbox, archive ] = results;
@@ -59,7 +71,7 @@ const ResultsPanel = ({ results, handleListItemClick, selectedIndex }) => {
             addChildren(archive, local.length + dropbox.length, "No results in archive");
         }
         setChildren(temp);
-    }, [ results ])
+    }, [ results, selectedIndex ])
 
     return (<div className="results">
         <Box sx={{

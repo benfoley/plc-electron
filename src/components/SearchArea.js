@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import './ResultsPanel.css';
 import SearchBar from './SearchBar';
 import ResultsPanel from './ResultsPanel';
+import FilePanel from './FilePanel';
 
 function SearchArea() {
     const [ query, setQuery ] = useState("");
@@ -30,7 +32,7 @@ function SearchArea() {
       }
     }, [ query ])
 
-    const handleListItemClick = (event, index) => {
+    const handleResultClick = (event, index) => {
       console.log(`list item clicked: index ${index}`);
       console.log(event);
       setSelectedIndex(index);
@@ -41,10 +43,12 @@ function SearchArea() {
         <header className="App-header">
           <SearchBar updateQuery={ setQuery } />
         </header>
-        <ResultsPanel
-            results={ results }
-            handleListItemClick={ handleListItemClick }
-            selectedIndex={ selectedIndex }/>
+        <div className="flex">
+          <ResultsPanel
+              results={ results }
+              handleResultClick={ handleResultClick }/>
+          <FilePanel />
+        </div>
       </div>
     );
 }

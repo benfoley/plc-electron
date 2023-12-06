@@ -16,7 +16,7 @@ def get_all_files():
 @app.route('/search/<query>')
 def search_files(query=""):
     dbx = get_dropbox(os.getenv("APP_KEY"), os.getenv("REFRESH_TOKEN"))
-    ls = search_for_file(query, dbx, ".", buckets["ANNUAL"])
+    ls = search_for_file(query, dbx, "./public", buckets["ANNUAL"])
     
     return {
         'results': ls
