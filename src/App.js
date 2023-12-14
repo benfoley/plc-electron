@@ -42,9 +42,7 @@ function App() {
     return (
       <div className="App">
         <SearchArea />
-        {/* <header className="App-header">
-          <SearchBar />
-        </header>
+        {/*
         {profile && profile.name ? (
             <div>
                 <img src={profile.picture} alt="user image" />
@@ -58,8 +56,7 @@ function App() {
         ) : (
             <button onClick={() => login()}>Sign in with Google</button>
         )}
-
-        <ResultsPanel /> */}
+        */}
       </div>
     );
 }

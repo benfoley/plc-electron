@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
-import './ResultsPanel.css';
 import SearchBar from './SearchBar';
 import ResultsPanel from './ResultsPanel';
 import FilePanel from './FilePanel';
@@ -9,9 +8,10 @@ function SearchArea() {
     const [ query, setQuery ] = useState("");
     const [ results, setResults ] = useState([[], [], []]);
     const [ selectedIndex, setSelectedIndex ] = useState(0);
+    const [ selectedPath, setSelectedPath ] = useState("");
+    const [ selectedSublist, setSelectedSublist ] = useState(3);
 
     useEffect(() => {
-      console.log("query updated: " + query);
       if (query) {
         fetch(`/search/${query}`).then(res => res.json()).then(data => {
           console.log(data.results);
@@ -33,23 +33,52 @@ function SearchArea() {
     }, [ query ])
 
     const handleResultClick = (event, index) => {
-      console.log(`list item clicked: index ${index}`);
-      console.log(event);
+      var prevResults = 0;
+      var newPath = "";
+      var newList = 3;
+      var found = false;
+      
+      for (let i = 0; i < results.length; i++) {
+        for (let j = 0; j < results[i].length; j++) {
+          if (prevResults + j === index) {
+            newList = i;
+            newPath = results[i][j];
+            found = true;
+            break;
+          }
+        }
+
+        if (found) {
+          break;
+        }
+        
+        prevResults += results[i].length;
+      }
+      
       setSelectedIndex(index);
+      setSelectedPath(newPath);
+
+      if (newList === 3) {
+        console.error("invalid result list");
+      }
+      setSelectedSublist(newList);
     };
 
     return (
-      <div>
-        <header className="App-header">
+      <>
+        <header className="search">
           <SearchBar updateQuery={ setQuery } />
         </header>
-        <div className="flex">
-          <ResultsPanel
+        <div className="results-section">
+          <ResultsPanel className="results"
               results={ results }
               handleResultClick={ handleResultClick }/>
-          <FilePanel />
+          <FilePanel
+              path={ selectedPath }
+              sublist={ selectedSublist }
+              />
         </div>
-      </div>
+      </>
     );
 }
 

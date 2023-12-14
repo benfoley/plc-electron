@@ -24,7 +24,6 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             temp.push(
                 <List component="nav">
                     {list.map((result, index) => {
-                        console.log(`result ${index}: ${result}`);
                         return (
                             <ListItemButton
                                 key={ result }
@@ -38,7 +37,6 @@ const ResultsPanel = ({ results, handleResultClick }) => {
                 </List>
             );
         } else {
-            console.log(noResultsMessage);
             temp.push(
                 <List component="nav">
                     <ListItemButton key={ noResultsMessage } selected={ false }>
@@ -52,7 +50,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
     useEffect(() => {
         if (!(Array.isArray(results)) || results.length !== 3
             || results.some((sublist) => {return !Array.isArray(sublist)})) {
-            console.log("error retrieving results");
+            console.error("error retrieving results");
             temp = [(
                 <List component="nav">
                     <ListItemButton key="error" selected={ false }>
@@ -61,7 +59,6 @@ const ResultsPanel = ({ results, handleResultClick }) => {
                 </List>
             )];
         } else {
-            console.log("checks okay");
             const [ local, dropbox, archive ] = results;
             temp = [];
             addChildren(local, 0, "No local results");

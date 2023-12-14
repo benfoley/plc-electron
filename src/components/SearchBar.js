@@ -14,25 +14,30 @@ const SearchBar = ({ updateQuery }) => {
         updateQuery(value);
     };
 
-    return <div>
-        <TextField
-            id="search-input"
-            label="Search here"
-            value={ value }
-            onInput={ e => setValue(e.target.value) }
-            onSubmit={ submitQuery }
-            variant="outlined" 
-            InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton edge="end" color="primary" onClick={ submitQuery }>
-                      <SearchIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-            }}
-        />
-    </div>
+    const handleKey = (e) => {
+      if (e.key === 'Enter') {
+        updateQuery(value);
+      }
+    }
+
+    return <TextField
+        id="search-input"
+        label="Search here"
+        value={ value }
+        onInput={ e => setValue(e.target.value) }
+        onKeyDown={ handleKey }
+        onSubmit={ submitQuery }
+        variant="outlined" 
+        InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton edge="end" color="primary" onClick={ submitQuery }>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+        }}
+    />
 }
 
 

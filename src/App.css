@@ -1,13 +1,4 @@
-.App {
-  text-align: center;
-  /* display: flex;
-  flex-direction: column; */
-  display: block;
-  align-items: center;
-  justify-content: center;
-}
-
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -18,17 +9,9 @@
   }
 }
 
-.App-header {
-  background-color: #e8dddd /* #282c34 */;
-  /* min-height: 100vh; */
-  width: 100%;
-  font-size: calc(10px + 2vmin);
-  color: black;
-  padding: 2rem 0;
-}
-
 .App-link {
-  color: #282c34 /* #61dafb */;
+  background-color: #61dafb;
+  color: #282c34;
 }
 
 @keyframes App-logo-spin {
@@ -38,4 +21,66 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin: 2em;
+}
+
+.search {
+  background-color: #e8dddd /* #282c34 */;
+  font-size: calc(10px + 2vmin);
+  color: black;
+}
+
+.results-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 4fr 1fr;
+  grid-template-areas:
+    'results info'
+    'results download';
+}
+
+.results {
+  background-color: #ddffee /* #282c34 */;
+  grid-area: results;
+  margin: 1em 2em;
+  padding: 0.5em;
+  border: 1px solid darkgray;
+  border-radius: 8px;
+}
+
+.info {
+  background-color: bisque;
+  grid-area: info;
+  margin: 1em 2em;
+  display: flex;
+}
+
+.textarea {
+  display: block;
+  text-align: start;
+  width: 100%;
+  overflow: hidden;
+  /* resize: both; */
+  min-height: 40px;
+  line-height: 20px;
+  border: 1px solid darkgray;
+  border-radius: 8px;
+  padding: 0.2em 0.5em;
+}
+
+.download {
+  grid-area: download;
+  margin: 1em;
+}
+
+#download-button {
+  font-size: large;
+  padding: 0.7em;
+  flex-basis: 100%;
 }
