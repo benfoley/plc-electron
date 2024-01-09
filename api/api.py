@@ -24,7 +24,6 @@ def search_files(query=""):
 
 @app.route('/download/archive/<path>')
 def download_from_archive(path=""):
-    breakpoint()
     try:
         download_blob(bucket_name=buckets["ANNUAL"],
                       source_blob_name=path,
