@@ -2,16 +2,26 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 
 function FilePanel({ path, sublist }) {
+    function handleDownload(e) {
+        console.log(sublist)
+        console.log(typeof(sublist))
+        if (sublist === 2) {
+            fetch(`/download/archive/${path}`, {method: "GET"}).then(res => {
+                console.log(res);
+            })
+        }
+    }
+
     return (<>
         <div className='info'>
             {/* <TextField id="info-field" value={"" + path + ", " + sublist} /> */}
             <span className="textarea" role="textbox" contenteditable>
                 {path}
                 <br />
-                {sublist}
+                {path ? "list " + sublist : null}
             </span>
         </div>
-        <div className='download'><button id="download-button">Download</button></div>
+        <div className='download'><button id="download-button" onClick={ handleDownload }>Download</button></div>
     </>);
 }
 

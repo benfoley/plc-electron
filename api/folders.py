@@ -86,6 +86,22 @@ def get_name_from_root(full_path: str, root: str) -> str:
     return short
 
 ### General
+def download_blob(bucket_name, source_blob_name, destination_file_name):
+    """Downloads a blob from the bucket.
+    Source: https://cloud.google.com/storage/docs/downloading-objects#storage-download-object-python
+    """
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    blob = bucket.blob(source_blob_name)
+    blob.download_to_filename(destination_file_name)
+
+    print(
+        "Downloaded storage object {} from bucket {} to local file {}.".format(
+            source_blob_name, bucket_name, destination_file_name
+        )
+    )
+
 def upload_to_gcloud_archive(dir: str, bucket_name: str):
     files = get_filenames_from(dir)
 

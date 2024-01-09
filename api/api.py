@@ -21,3 +21,14 @@ def search_files(query=""):
     return {
         'results': ls
     }
+
+@app.route('/download/archive/<path>')
+def download_from_archive(path=""):
+    breakpoint()
+    try:
+        download_blob(bucket_name=buckets["ANNUAL"],
+                      source_blob_name=path,
+                      destination_file_name=os.path.join("..", "downloads", path))
+        return {'status': 200}
+    except Exception:
+        return {'status': 500}
