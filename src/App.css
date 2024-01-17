@@ -31,7 +31,7 @@
 }
 
 .search {
-  background-color: #e8dddd /* #282c34 */;
+  /* background-color: #e8dddd #282c34; */
   font-size: calc(10px + 2vmin);
   color: black;
 }
@@ -46,7 +46,7 @@
 }
 
 .results {
-  background-color: #ddffee /* #282c34 */;
+  /* background-color: #ddffee #282c34; */
   grid-area: results;
   margin: 1em 2em;
   padding: 0.5em;
@@ -55,7 +55,7 @@
 }
 
 .info {
-  background-color: bisque;
+  /* background-color: bisque; */
   grid-area: info;
   margin: 1em 2em;
   display: flex;

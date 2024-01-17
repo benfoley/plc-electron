@@ -6,6 +6,7 @@ import ResultsPanel from './components/ResultsPanel';
 import SearchArea from './components/SearchArea';
 
 // https://blog.logrocket.com/guide-adding-google-login-react-app/
+// https://www.npmjs.com/package/react-loading-overlay
 
 function App() {
     const [ user, setUser ] = useState([]);

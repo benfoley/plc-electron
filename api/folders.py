@@ -86,7 +86,30 @@ def get_name_from_root(full_path: str, root: str) -> str:
     return short
 
 ### General
-def download_blob(bucket_name, source_blob_name, destination_file_name):
+def create_destination_folders(destination_path):
+    head, tail = os.path.split(destination_path)
+    tails = []
+    while len(tail) > 0:
+        head, tail = os.path.split(head)
+        if len(tail) > 0:
+            tails = [tail] + tails
+
+    if len(head) > 0 and head not in tails:
+        tails = [head] + tails
+
+    for i in range(0, len(tails)):
+        if i > 0:
+            partial_path = os.path.join(*tails[:i+1])
+        else:
+            partial_path = tails[0]
+        if not os.path.isdir(partial_path):
+            os.mkdir(partial_path)
+
+def download_dropbox(dbx, source_path, destination_path):
+    create_destination_folders(destination_path)
+    dbx.files_download_to_file(destination_path, source_path)
+
+def download_blob(bucket_name, source_blob_name, destination_path):
     """Downloads a blob from the bucket.
     Source: https://cloud.google.com/storage/docs/downloading-objects#storage-download-object-python
     """
@@ -94,11 +117,13 @@ def download_blob(bucket_name, source_blob_name, destination_file_name):
     bucket = storage_client.bucket(bucket_name)
 
     blob = bucket.blob(source_blob_name)
-    blob.download_to_filename(destination_file_name)
+    breakpoint()
+    create_destination_folders(destination_path)
+    blob.download_to_filename(destination_path)
 
     print(
         "Downloaded storage object {} from bucket {} to local file {}.".format(
-            source_blob_name, bucket_name, destination_file_name
+            source_blob_name, bucket_name, destination_path
         )
     )
 

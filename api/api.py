@@ -22,12 +22,23 @@ def search_files(query=""):
         'results': ls
     }
 
-@app.route('/download/archive/<path>')
-def download_from_archive(path=""):
+@app.route('/download/archive/<path:filename>')
+def download_from_archive(filename=""):
     try:
         download_blob(bucket_name=buckets["ANNUAL"],
-                      source_blob_name=path,
-                      destination_file_name=os.path.join("..", "downloads", path))
+                      source_blob_name=filename,
+                      destination_path=os.path.join("..", "downloads", filename))
+        return {'status': 200}
+    except Exception:
+        return {'status': 500}
+    
+@app.route('/download/dropbox/<path:filename>')
+def download_from_dropbox(filename=""):
+    breakpoint()
+    try:
+        download_dropbox(
+            source_path=filename,
+            destination_path=os.path.join("..", "downloads", filename))
         return {'status': 200}
     except Exception:
         return {'status': 500}

@@ -9,6 +9,10 @@ function FilePanel({ path, sublist }) {
             fetch(`/download/archive/${path}`, {method: "GET"}).then(res => {
                 console.log(res);
             })
+        } else if (sublist === 1) {
+            fetch(`/download/dropbox/${path}`, {method: "GET"}).then(res => {
+                console.log(res);
+            })
         }
     }
 
