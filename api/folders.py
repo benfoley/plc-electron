@@ -5,9 +5,9 @@ from datetime import datetime
 from dotenv import load_dotenv
 from google.cloud import storage
 from utils import parse_query, string_fits_query, format_datetime
-from dropbox_lib import get_dropbox
+from dropbox_lib import get_dropbox, get_files
 
-def search_dir(dir: str, query: str) -> List[str]:
+def search_dir_from_query(dir: str, query: str) -> List[str]:
     include, exclude, optional = parse_query(query)
     result = []
     for root, dirs, files in os.walk(dir):
@@ -16,8 +16,37 @@ def search_dir(dir: str, query: str) -> List[str]:
                 result.append(os.path.join(root, file))
     return result
 
-def search_blobs(blobs: List[Any], query: str) -> List[str]:
+def search_dir_from_lists(dir: str, include, exclude, optional) -> List[str]:
+    result = []
+    for root, dirs, files in os.walk(dir):
+        for file in files:
+            if string_fits_query(file, include, exclude, optional):
+                result.append(os.path.abspath(os.path.join(root, file)))
+                # result.append(os.path.join(root, file))
+    return result
+
+def dropbox_search(dbx, include, exclude, optional, all_files=None, path="",
+                   recursive=True, index_location: str = ""):
+    # saves having to get all files every time
+    if not all_files:
+        all_files = get_files(dbx, path, recursive)
+    result = []
+
+    for path_lower, metadata in all_files.items():
+        if string_fits_query(path_lower, include, exclude, optional):
+            result.append(path_lower)
+    return result
+
+def search_blobs_from_query(blobs: List[Any], query: str) -> List[str]:
     include, exclude, optional = parse_query(query)
+    result = []
+    files = [blob.name for blob in blobs]
+    for file in files:
+        if string_fits_query(file, include, exclude, optional):
+            result.append(file)
+    return result
+
+def search_blobs_from_lists(blobs: List[Any], include, exclude, optional) -> List[str]:
     result = []
     files = [blob.name for blob in blobs]
     for file in files:
@@ -117,7 +146,6 @@ def download_blob(bucket_name, source_blob_name, destination_path):
     bucket = storage_client.bucket(bucket_name)
 
     blob = bucket.blob(source_blob_name)
-    breakpoint()
     create_destination_folders(destination_path)
     blob.download_to_filename(destination_path)
 
@@ -136,11 +164,22 @@ def upload_to_gcloud_archive(dir: str, bucket_name: str):
         upload_file(bucket_name, path, blob_name)
 
 def search_for_file(query: str, dbx, local_path: str, bucket_name: str, index_location: str = ""):
-    local = search_dir(local_path, query) # TODO fix this
-    dbx_matches = [file.metadata.path_lower for file in dbx.files_search("", query).matches]
+    query = query.lower()
+    if len(index_location) > 0:
+        include, exclude, optional = translate_query(query, index_location)
+    else:
+        include, exclude, optional = parse_query(query)
+    
+    # local = search_dir_from_query(local_path, query) # TODO fix this
+    # dbx_matches = [file.metadata.path_lower for file in dbx.files_search("", query).matches]
+    # storage_client = storage.Client()
+    # blobs = storage_client.list_blobs(bucket_name)
+    # archive_matches = search_blobs_from_query(blobs, query)
+    local = search_dir_from_lists(local_path, include, exclude, optional)
+    dbx_matches = [path for path in dropbox_search(dbx, include, exclude, optional)]
     storage_client = storage.Client()
     blobs = storage_client.list_blobs(bucket_name)
-    archive_matches = search_blobs(blobs, query)
+    archive_matches = search_blobs_from_lists(blobs, include, exclude, optional)
     return [local, dbx_matches, archive_matches]
     # return local + dbx_matches + archive_matches
 

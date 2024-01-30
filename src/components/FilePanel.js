@@ -25,7 +25,10 @@ function FilePanel({ path, sublist }) {
                 {path ? "list " + sublist : null}
             </span>
         </div>
-        <div className='download'><button id="download-button" onClick={ handleDownload }>Download</button></div>
+        <div className='download'><button
+            disabled={sublist === 0}
+            id="download-button"
+            onClick={ handleDownload }>Download</button></div>
     </>);
 }
 

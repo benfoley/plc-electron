@@ -9,7 +9,7 @@ import {
 
 const ResultsPanel = ({ results, handleResultClick }) => {
     const [ children, setChildren ] = useState([]);
-    const [ selectedIndex, setSelectedIndex ] = useState(0);
+    const [ selectedIndex, setSelectedIndex ] = useState(-1);
     var temp = [];
 
     const handleListItemClick = (event, index) => {
@@ -20,7 +20,9 @@ const ResultsPanel = ({ results, handleResultClick }) => {
     const addChildren = (list, startIndex, noResultsMessage) => {
         if (list.length > 0) {
             temp.push(
-                <List component="nav">
+                <List component="nav"
+                        scrollByContent={true}
+                        scrollByThumb={true}>
                     {list.map((result, index) => {
                         return (
                             <ListItemButton
@@ -64,17 +66,20 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             addChildren(dropbox, local.length, "No results in Dropbox");
             temp.push(<Divider />);
             addChildren(archive, local.length + dropbox.length, "No results in archive");
+            if (local.length === 0 && dropbox.length === 0 && archive.length === 0 && selectedIndex !== -1) {
+                setSelectedIndex(-1);
+            }
         }
         setChildren(temp);
     }, [ results, selectedIndex ])
 
     return (<div className="results">
-        <Box sx={{
+        {/* <Box sx={{
             bgcolor: 'background.paper',
             height: 400
-            }}>
+            }}> */}
             { children }
-        </Box>
+        {/* </Box> */}
     </div>);
 }
 
