@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Box,
     List,
     Divider,
     ListItemButton,
@@ -74,12 +73,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
     }, [ results, selectedIndex ])
 
     return (<div className="results">
-        {/* <Box sx={{
-            bgcolor: 'background.paper',
-            height: 400
-            }}> */}
-            { children }
-        {/* </Box> */}
+        { children }
     </div>);
 }
 
