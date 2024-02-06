@@ -1,4 +1,3 @@
-import time
 from flask import Flask
 from folders import *
 
@@ -13,13 +12,17 @@ def get_all_files():
         'results': ls
     }
 
-@app.route('/search/<query>')
+@app.route('/search/<path:query>')
 def search_files(query=""):
-    ls = search_for_file(query, dbx, "../files", buckets["ANNUAL"], index_location)
-    
-    return {
-        'results': ls
-    }
+    try:
+        ls = search_for_file(query, dbx, "../files", buckets["ANNUAL"], index_location)
+
+        return {
+            'results': ls
+        }
+    except Exception as e:
+        print("Exception: " + str(e))
+        return {'status': 500}
 
 @app.route('/download/archive/<path:filename>')
 def download_from_archive(filename=""):
@@ -28,22 +31,23 @@ def download_from_archive(filename=""):
                       source_blob_name=filename,
                       destination_path=os.path.join("..", "downloads", filename))
         return {'status': 200}
-    except Exception:
+    except Exception as e:
+        print("Exception: " + str(e))
         return {'status': 500}
     
 @app.route('/download/dropbox/<path:filename>')
 def download_from_dropbox(filename=""):
     try:
-        # if not filename.startswith(os.sep):
-        #     filename = os.path.join(".", filename)
+        if not filename.startswith("/"):
+            source = "/" + filename
+        else:
+            source = filename
+
         download_dropbox(
             dbx,
-            source_path=filename,
+            source_path=source,
             destination_path=os.path.join("..", "downloads", filename))
-        
-        # stone.backends.python_rsrc.stone_validators.ValidationError:
-        # 'shared/folder c/files/archive/dropbox/dropbox2' did not match pattern
-        # '(/(.|[\r\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)'
         return {'status': 200}
-    except Exception:
+    except Exception as e:
+        print("Exception: " + str(e))
         return {'status': 500}
