@@ -25,12 +25,19 @@ from utils import *
 #     return get_last_edited(last_checked_default)
 
 # Dropbox processing
-def process_folder_entries(current_state: Dict[str, Metadata], entries) -> Dict[str, FileMetadata]:
+def process_folder_entries(current_state: Dict[str, Metadata], entries,
+                           include_folders=False) -> Dict[str, FileMetadata]:
     for entry in entries:
-        if isinstance(entry, FileMetadata):
-            current_state[entry.path_lower] = entry
-        elif isinstance(entry, DeletedMetadata):
-            current_state.pop(entry.path_lower, None)
+        if include_folders:
+            if isinstance(entry, DeletedMetadata):
+                current_state.pop(entry.path_lower, None)
+            else:
+                current_state[entry.path_lower] = entry
+        else:
+            if isinstance(entry, FileMetadata):
+                current_state[entry.path_lower] = entry
+            elif isinstance(entry, DeletedMetadata):
+                current_state.pop(entry.path_lower, None)
     return current_state
 
 def path_exists(dbx: Dropbox, path: str) -> bool:
@@ -42,15 +49,15 @@ def path_exists(dbx: Dropbox, path: str) -> bool:
             return False
         raise
 
-def get_files(dbx: Dropbox, path="", recursive=True) -> Dict[str, FileMetadata]:
+def get_files(dbx: Dropbox, path="", recursive=True, include_folders=False) -> Dict[str, FileMetadata]:
     print("Scanning for files")
     result = dbx.files_list_folder(path, recursive)
-    files = process_folder_entries({}, result.entries)
+    files = process_folder_entries({}, result.entries, include_folders)
 
     while result.has_more:
         print("Collecting additional files")
         result = dbx.files_list_folder_continue(result.cursor)
-        files = process_folder_entries(files, result.entries)
+        files = process_folder_entries(files, result.entries, include_folders)
     return files
 
 def upload_to_dropbox(dbx: Dropbox, files: Dict[str, str], destination_folder=""):

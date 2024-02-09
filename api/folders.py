@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from google.cloud import storage
 from utils import parse_query, string_fits_query, format_datetime
 from dropbox_lib import get_dropbox, get_files
+from dropbox.files import FolderMetadata
 
 def search_dir_from_query(dir: str, query: str) -> List[str]:
     include, exclude, optional = parse_query(query)
@@ -25,11 +26,11 @@ def search_dir_from_lists(dir: str, include, exclude, optional) -> List[str]:
                 # result.append(os.path.join(root, file))
     return result
 
-def dropbox_search(dbx, include, exclude, optional, all_files=None, path="",
-                   recursive=True, index_location: str = ""):
+def dropbox_search(dbx, include=[], exclude=[], optional=[], all_files=None, path="",
+                   recursive=True, index_location: str = "", include_folders=False):
     # saves having to get all files every time
     if not all_files:
-        all_files = get_files(dbx, path, recursive)
+        all_files = get_files(dbx, path, recursive, include_folders)
     result = []
 
     for path_lower, metadata in all_files.items():
@@ -135,8 +136,18 @@ def create_destination_folders(destination_path):
             os.mkdir(partial_path)
 
 def download_dropbox(dbx, source_path, destination_path):
-    create_destination_folders(destination_path)
-    dbx.files_download_to_file(destination_path, source_path)
+    if isinstance(dbx.files_get_metadata(source_path), FolderMetadata):
+        results = dropbox_search(dbx, path=source_path)
+        for res in results:
+            if res.startswith(source_path):
+                if res.startswith(os.path.sep):
+                    path = res[1:]
+                result_destination_path = os.path.join("..", "downloads", path)
+                create_destination_folders(result_destination_path)
+                dbx.files_download_to_file(result_destination_path, res)
+    else:
+        create_destination_folders(destination_path)
+        dbx.files_download_to_file(destination_path, source_path)
 
 def download_blob(bucket_name, source_blob_name, destination_path):
     """Downloads a blob from the bucket.
@@ -170,18 +181,13 @@ def search_for_file(query: str, dbx, local_path: str, bucket_name: str, index_lo
     else:
         include, exclude, optional = parse_query(query)
     
-    # local = search_dir_from_query(local_path, query) # TODO fix this
-    # dbx_matches = [file.metadata.path_lower for file in dbx.files_search("", query).matches]
-    # storage_client = storage.Client()
-    # blobs = storage_client.list_blobs(bucket_name)
-    # archive_matches = search_blobs_from_query(blobs, query)
     local = search_dir_from_lists(local_path, include, exclude, optional)
-    dbx_matches = [path for path in dropbox_search(dbx, include, exclude, optional)]
+    dbx_matches = [path for path in dropbox_search(
+        dbx, include, exclude, optional, include_folders=True)]
     storage_client = storage.Client()
     blobs = storage_client.list_blobs(bucket_name)
     archive_matches = search_blobs_from_lists(blobs, include, exclude, optional)
     return [local, dbx_matches, archive_matches]
-    # return local + dbx_matches + archive_matches
 
 def translate_query(query: str, index_location: str) -> Tuple[List[str], List[str], List[str]]:
     include, exclude, optional = parse_query(query)
