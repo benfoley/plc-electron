@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-const SearchBar = ({ updateQuery }) => {
+const SearchBar = ({ updateQuery, enabled }) => {
     const [ value, setValue ] = useState("");
 
     const submitQuery = (e) => {
@@ -28,6 +28,7 @@ const SearchBar = ({ updateQuery }) => {
         onKeyDown={ handleKey }
         onSubmit={ submitQuery }
         variant="outlined" 
+        contentEditable={ enabled }
         InputProps={{
             endAdornment: (
               <InputAdornment position="end">

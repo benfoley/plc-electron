@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import './App.css';
 
+import { IconButton } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import LoadingOverlay from 'react-loading-overlay';
 
 import SearchBar from './components/SearchBar';
 import ResultsPanel from './components/ResultsPanel';
 import FilePanel from './components/FilePanel';
+import SettingsOverlay from './components/SettingsOverlay';
 // import SearchArea from './components/SearchArea';
 
 
@@ -14,8 +17,7 @@ import FilePanel from './components/FilePanel';
 // https://www.npmjs.com/package/react-loading-overlay
 
 function App() {
-    const [ user, setUser ] = useState([]);
-    const [ profile, setProfile ] = useState([]);
+    const [settingsIsActive, setSettingsIsActive] = useState(false);
     const [ query, setQuery ] = useState("");
     const [ results, setResults ] = useState([[], [], []]);
     // const [ selectedIndex, setSelectedIndex ] = useState(0);
@@ -48,33 +50,20 @@ function App() {
       }
     }, [ query ])
 
-    const login = useGoogleLogin({
-      onSuccess: (codeResponse) => setUser(codeResponse),
-      onError: (error) => console.log('Login Failed:', error)
-    });
-
-    const logOut = () => {
-        googleLogout();
-        setProfile(null);
-    };
-
-    // componentDidMount
-    useEffect(logOut, []);
-
-    // componentDidUpdate(dependency)
-    useEffect(() => {
-        if (user) {
-            fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    Accept: 'application/json'
-                }
-            })
-            .then(res => res.json())
-            .then(res => setProfile(res))
-            .catch(err => console.log(err));
-        }
-    }, [ user ]);
+    // login user
+    // useEffect(() => {
+    //     if (user) {
+    //         fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${user.access_token}`,
+    //                 Accept: 'application/json'
+    //             }
+    //         })
+    //         .then(res => res.json())
+    //         .then(res => setProfile(res))
+    //         .catch(err => console.log(err));
+    //     }
+    // }, [ user ]);
     
     const handleResultClick = (event, index) => {
       var prevResults = 0;
@@ -108,9 +97,14 @@ function App() {
       setSelectedSublist(newList);
     };
 
-    return (<LoadingOverlay active={loading} spinner={loading}><div className="App">
+    return (<LoadingOverlay active={loading} spinner={loading}>
+      <div className="App">
         <header className="search">
-          <SearchBar updateQuery={ setQuery } />
+          <SearchBar updateQuery={ setQuery } enabled={ !loading }/>
+          <IconButton onClick={() => setSettingsIsActive(true)}>
+            <SettingsIcon />
+          </IconButton>
+          <SettingsOverlay isActive={settingsIsActive} onClose={() => setSettingsIsActive(!settingsIsActive)} />
         </header>
         <div className="results-section">
           <ResultsPanel className="results"
@@ -121,23 +115,8 @@ function App() {
               sublist={ selectedSublist }
               />
         </div>
-        
-        {/*
-        {profile && profile.name ? (
-            <div>
-                <img src={profile.picture} alt="user image" />
-                <h3>User Logged in</h3>
-                <p>Name: {profile.name}</p>
-                <p>Email Address: {profile.email}</p>
-                <br />
-                <br />
-                <button onClick={logOut}>Log out</button>
-            </div>
-        ) : (
-            <button onClick={() => login()}>Sign in with Google</button>
-        )}
-        */}
-    </div></LoadingOverlay>);
+      </div>
+    </LoadingOverlay>);
 }
 
 export default App;

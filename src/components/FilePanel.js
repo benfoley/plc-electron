@@ -32,10 +32,10 @@ function FilePanel({ path, sublist }) {
             </span>
         </div>
         <LoadingOverlay active={loading} spinner={loading}>
-            <div className='download'><button
+            <button className='download'
                 disabled={sublist === 0}
                 id="download-button"
-                onClick={ handleDownload }>Download</button></div>
+                onClick={ handleDownload }>Download</button>
         </LoadingOverlay>
     </>);
 }

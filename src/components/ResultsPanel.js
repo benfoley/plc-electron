@@ -21,7 +21,8 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             temp.push(
                 <List component="nav"
                         scrollByContent={true}
-                        scrollByThumb={true}>
+                        scrollByThumb={true}
+                        key={ "list_starting_" + startIndex }>
                     {list.map((result, index) => {
                         return (
                             <ListItemButton
@@ -37,7 +38,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             );
         } else {
             temp.push(
-                <List component="nav">
+                <List component="nav" key={ "list_" + noResultsMessage }>
                     <ListItemButton key={ noResultsMessage } selected={ false }>
                         <ListItemText primary={ noResultsMessage } />
                     </ListItemButton>
@@ -51,7 +52,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             || results.some((sublist) => {return !Array.isArray(sublist)})) {
             console.error("error retrieving results");
             temp = [(
-                <List component="nav">
+                <List component="nav" key="results-error">
                     <ListItemButton key="error" selected={ false }>
                         <ListItemText primary="Error retrieving results" />
                     </ListItemButton>
