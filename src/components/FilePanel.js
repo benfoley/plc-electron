@@ -25,7 +25,7 @@ function FilePanel({ path, sublist }) {
     return (<>
         <div className='info'>
             {/* <TextField id="info-field" value={"" + path + ", " + sublist} /> */}
-            <span className="textarea" role="textbox" contenteditable>
+            <span className="textarea" role="textbox" contentEditable>
                 {path}
                 <br />
                 {path ? "list " + sublist : null}
