@@ -4,7 +4,7 @@ import './App.css';
 
 import { IconButton } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import LoadingOverlay from 'react-loading-overlay';
+import LoadingOverlay from 'react-loading-overlay-ts';
 
 import SearchBar from './components/SearchBar';
 import ResultsPanel from './components/ResultsPanel';
