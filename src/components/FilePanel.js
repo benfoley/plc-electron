@@ -6,29 +6,31 @@ import LoadingOverlay from 'react-loading-overlay-ts';
 function FilePanel({ path, sublist }) {
     const [ loading, setLoading ] = useState(false);
 
-    function handleDownload(e) {
+    const handleDownload = e => {
+        setLoading(true);
+        // The URLs here are handled by Flask. Look in api/api.py
+        // Flask should download the file from Cloud/DropBox and save to downloads dir
+        // TODO: add async and move setLoading out of then
+        // sublist 2 is cloud, sublist 1 is dropbox
         if (sublist === 2) {
-            setLoading(true);
-            fetch(`/download/archive/${path}`, {method: "GET"}).then(res => {
+            fetch(`/download/archive/${path}`, {method: "GET"})
+            .then(res => {
                 console.log(res);
                 setLoading(false);
             })
         } else if (sublist === 1) {
-            setLoading(true);
-            fetch(`/download/dropbox/${path}`, {method: "GET"}).then(res => {
+            fetch(`/download/dropbox/${path}`, {method: "GET"})
+            .then(res => {
                 console.log(res);
                 setLoading(false);
             })
-        }
+        }                  
     }
-
+    
     return (<>
         <div className='info'>
-            {/* <TextField id="info-field" value={"" + path + ", " + sublist} /> */}
             <span className="textarea" role="textbox" >
                 {path}
-                {/* <br /> */}
-                {/* {path ? "list " + sublist : null} */}
             </span>
         </div>
         <LoadingOverlay active={loading} spinner={loading}>

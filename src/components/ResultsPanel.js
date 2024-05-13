@@ -19,11 +19,9 @@ const ResultsPanel = ({ results, handleResultClick }) => {
     const addChildren = (list, startIndex, noResultsMessage) => {
         if (list.length > 0) {
             temp.push(
-                <List component="nav"
-                        scrollByContent={true}
-                        scrollByThumb={true}
-                        key={ "list_starting_" + startIndex }>
+                <List component="nav" key={ "list_starting_" + startIndex }>
                     {list.map((result, index) => {
+                        console.log("result", result);
                         return (
                             <ListItemButton
                                 key={ result }
@@ -62,9 +60,9 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             const [ local, dropbox, archive ] = results;
             temp = [];
             addChildren(local, 0, "No local results");
-            temp.push(<Divider />);
+            temp.push(<Divider key='a' />);
             addChildren(dropbox, local.length, "No results in Dropbox");
-            temp.push(<Divider />);
+            temp.push(<Divider key='b' />);
             addChildren(archive, local.length + dropbox.length, "No results in archive");
             if (local.length === 0 && dropbox.length === 0 && archive.length === 0 && selectedIndex !== -1) {
                 setSelectedIndex(-1);

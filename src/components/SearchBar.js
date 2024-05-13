@@ -28,7 +28,6 @@ const SearchBar = ({ updateQuery, enabled }) => {
         onKeyDown={ handleKey }
         onSubmit={ submitQuery }
         variant="outlined" 
-        contentEditable={ enabled }
         InputProps={{
             endAdornment: (
               <InputAdornment position="end">
