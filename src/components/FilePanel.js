@@ -25,10 +25,10 @@ function FilePanel({ path, sublist }) {
     return (<>
         <div className='info'>
             {/* <TextField id="info-field" value={"" + path + ", " + sublist} /> */}
-            <span className="textarea" role="textbox" contentEditable>
+            <span className="textarea" role="textbox" >
                 {path}
-                <br />
-                {path ? "list " + sublist : null}
+                {/* <br /> */}
+                {/* {path ? "list " + sublist : null} */}
             </span>
         </div>
         <LoadingOverlay active={loading} spinner={loading}>
