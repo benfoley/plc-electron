@@ -16,9 +16,19 @@ def get_all_files():
 def search_files(query=""):
     try:
         ls = search_for_file(query, dbx, "../files", buckets["ANNUAL"], index_location)
-
         return {
             'results': ls
+        }
+    except Exception as e:
+        print("Exception: " + str(e))
+        return {'status': 500}
+
+@app.route('/search/explain/<path:query>')
+def search_explain(query=""):
+    try:
+        ls = explain_translation(query, index_location)
+        return {
+            'explanation': ls
         }
     except Exception as e:
         print("Exception: " + str(e))
@@ -42,7 +52,6 @@ def download_from_dropbox(filename=""):
             source = "/" + filename
         else:
             source = filename
-
         download_dropbox(
             dbx,
             source_path=source,
@@ -51,3 +60,15 @@ def download_from_dropbox(filename=""):
     except Exception as e:
         print("Exception: " + str(e))
         return {'status': 500}
+
+@app.route('/preview/dropbox/<path:filename>')
+def preview_from_dropbox(filename=""):
+    if not filename.startswith("/"):
+        source = "/" + filename
+    else:
+        source = filename
+    thumbnails = []
+    entries = get_dropbox_thumbs(dbx, source)
+    for entry in entries:
+        thumbnails.append(entry.get_success().thumbnail  )
+    return {'status': 200, 'thumbnails': thumbnails}

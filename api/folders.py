@@ -1,12 +1,14 @@
 import os
 import json
+import requests
+
 from typing import Dict, List, Tuple, Any
 from datetime import datetime
 from dotenv import load_dotenv
 from google.cloud import storage
 from utils import parse_query, string_fits_query, format_datetime
 from dropbox_lib import get_dropbox, get_files
-from dropbox.files import FolderMetadata
+from dropbox.files import FolderMetadata, PathOrLink, ThumbnailArg, ThumbnailFormat, ThumbnailSize
 
 def search_dir_from_query(dir: str, query: str) -> List[str]:
     include, exclude, optional = parse_query(query)
@@ -184,12 +186,23 @@ def search_for_file(query: str, dbx, local_path: str, bucket_name: str, index_lo
     local = search_dir_from_lists(local_path, include, exclude, optional)
     dbx_matches = [path for path in dropbox_search(
         dbx, include, exclude, optional, include_folders=True)]
-    storage_client = storage.Client()
-    blobs = storage_client.list_blobs(bucket_name)
-    archive_matches = search_blobs_from_lists(blobs, include, exclude, optional)
+    archive_matches = []
+    # TEMP disable archive search
+    # storage_client = storage.Client()
+    # blobs = storage_client.list_blobs(bucket_name)
+    # archive_matches = search_blobs_from_lists(blobs, include, exclude, optional)
     return [local, dbx_matches, archive_matches]
 
-def translate_query(query: str, index_location: str) -> Tuple[List[str], List[str], List[str]]:
+def explain_translation(query: str, index_location: str):
+    query = query.lower()
+    if len(index_location) > 0:
+        include, exclude, optional = translate_query(query, index_location)
+    else: 
+        return "no translations found"
+    return(exclude, include+optional)
+
+
+def translate_query(query: str, index_location: str) -> Tuple[List[str], List[str], List[str]]:    
     include, exclude, optional = parse_query(query)
 
     index = None
@@ -227,8 +240,29 @@ def translate_query(query: str, index_location: str) -> Tuple[List[str], List[st
     include = [i for i in include if i not in optional]
     return include, exclude, optional
 
+# TODO put these somewhere else so they more obvious
 load_dotenv()
 index_location = "./search_terms.json"
 # dbx = get_dropbox(os.getenv("APP_KEY"), os.getenv("REFRESH_TOKEN"))
 # print(str(search_for_file("", dbx, "./files", buckets["ANNUAL"])))
 # get_files(dbx, os.path.join(os.path.sep, "Shared", "Folder C"))
+
+
+def get_dropbox_thumbs(dbx, source: str):
+    # Seems like this just gets metadata - not the file data :(
+    # source_path = PathOrLink.path(source)
+    # thumb = dbx.files_get_thumbnail_v2(source_path)
+
+    # url = "https://content.dropboxapi.com/2/files/get_thumbnail_v2"
+    # headers = {
+    #     "Authorization": "Bearer uat.AE-zzibQ983Wj8MJ_exSDiFwdMKb3ASnquz1_mFoWYSgPs5caqvs9wtiKESvn5ESg1IXbEfVGzhjY6DUianDjvGMUpfAcbYuObtcMUtpChDFUkGjIyUCkx87YiwH5UMwyvg4lThV1v_VRAUAUunSdxHhAo064tuC11K0pYk81Ig0UmHRZlEyjwA2GzhYoL-MgcKZ7MQi3ZpbroVm68sOHSdIy2RqQSET6Kvnstvg-tq8r6zzpSkb0WUXjdPg3xeIfonvwzGxHkWPB1sfTcyFiq2UrSu3brn9PDUBDoXRPsiXwXIa3aTDe4S9t07TyXmM4KaVN9fBBExjn3_WAPZOfxyApsfYb_haL8TCQgf_japZ077DVWd0wNf-HGV4_-6-3EEn76xUJh6p4f75sKh5xG1kFaKR7YGx6PrTK_62Fi4ZL7RqoVPSXukUXGcypmrQBTesgk73KawO0Hh4rTD4fEAnUmlLCLSMVdjzTtO-E0ZlBpIjOtoHGsViR0mxJyIj2XUxHm5V4mx-WyekZ-3cI17h2XsF-oP0q5GTEfU6e2_NONWC_J9sY8SEE66NW0EMRkasz6ODbDfHhAmPC96L3nklY3IHDwJScCjIiOYmZDzuiWpcrnn7kKMhgaCPWWXpx89HldkKrNdKssiTqx1v2WzdocKzXjL-sDUqDmfT-H28dxRXYM7Fwic3OPBp-yBDLNBDN50jME7XtdVCsYivvWtj9ewsGGk5Adzg5RDqC9hq2UJKS2LHVdPiyVI1B3Bxl0r8ecubvuzQbqzm5A1HNFYgsfy0TtgivTK3Y-_xdk5hrQg7LlayZFQms4GGOq9aFbVdZtl190_GpnIIQSnrC3drST1saJN_unUgKIVjX8XiO0rYCq20HsW62JOBMaftnpwBKPmDyQpeTEYyWGHrcEE-LJe0289KZaoJzB4CoUO3bCYpnE33L2V0f1P0pjg1MQnxjDe_LxMkxzkJkXIrJgPlh2kKALzwFlhMjqFsGz7e0iZf3LxWJ6nEnYiwtm-ZIyOuKBU3YCJwhcrL1nBdLBZyUCp3F_IsbW1ZMcFtSgZxG9IH8ksWS25skB5JlgbcV9lS_hHhRULHb5j2-eqLvrmw3fQqZ_VZ9IhyAe2lWLlqEkId8tlzmd6MduNPt0xBd-o5UcsNxOGg8SN7Sh5zBDYZK7rQN_JromeSiWi-MCegFjpfRzkgtdk6zuOW1xE9nMFAtjFLCuLLGAEG3g4QWUOqDMId-frQm9_L2FqrWWSl-mWDBMiTOZ42-qbe3NUewTU",
+    #     "Dropbox-API-Arg": "{\"resource\":{\".tag\":\"path\",\"path\":\"/bird.jpg\"}}"
+    # }
+    # response = requests.post(url, headers=headers)
+    entries = [
+        ThumbnailArg(path=source, format=ThumbnailFormat.png, size=ThumbnailSize.w128h128),
+    ]
+    batch_result = dbx.files_get_thumbnail_batch(entries=entries)
+    entries = batch_result.entries
+    return entries
+

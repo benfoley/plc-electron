@@ -19,6 +19,7 @@ import SettingsOverlay from './components/SettingsOverlay';
 function App() {
     const [settingsIsActive, setSettingsIsActive] = useState(false);
     const [ query, setQuery ] = useState("");
+    const [ queryTranslation, setQueryTranslation ] = useState("");
     const [ results, setResults ] = useState([[], [], []]);
     // const [ selectedIndex, setSelectedIndex ] = useState(0);
     const [ selectedPath, setSelectedPath ] = useState("");
@@ -27,10 +28,23 @@ function App() {
 
     useEffect(() => {
       if (query) {
+        console.log("query", query)
+
+        // show me the query translation.. eg bird also finding xxx, yyy, zzz
+        fetch(`/search/explain/${query}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("search/explain")
+          console.log(data.explanation)
+          setQueryTranslation(data.explanation)
+        });
+
         setLoading(true);
 
-        fetch(`/search/${query}`).then(res => res.json()).then(data => {
-          console.log(data.results);
+        fetch(`/search/${query}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log("search data.results", data.results);
           if (Array.isArray(data.results)) {
             if (data.results.length === 3) {
               if (data.results.every((sublist) => {return Array.isArray(sublist)})) {
@@ -97,6 +111,14 @@ function App() {
       setSelectedSublist(newList);
     };
 
+    const renderList = my_list => {
+      if (my_list && my_list.length > 0) {
+        return my_list.join(", ") 
+      } else {
+        return ""
+      }
+    }
+
     return (<LoadingOverlay active={loading} spinner={loading}>
       <div className="App">
         <header className="search">
@@ -106,7 +128,14 @@ function App() {
           </IconButton>
           <SettingsOverlay isActive={settingsIsActive} onClose={() => setSettingsIsActive(!settingsIsActive)} />
         </header>
+
+        <div className="query-translated">
+          <p>Search explanation:</p>
+          <li>Excluded: {renderList(queryTranslation[0])}</li>
+          <li>Included and optional: {renderList(queryTranslation[1])}</li>
+        </div>
         <div className="results-section">
+
           <ResultsPanel className="results"
               results={ results }
               handleResultClick={ handleResultClick }/>

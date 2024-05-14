@@ -21,7 +21,6 @@ const ResultsPanel = ({ results, handleResultClick }) => {
             temp.push(
                 <List component="nav" key={ "list_starting_" + startIndex }>
                     {list.map((result, index) => {
-                        console.log("result", result);
                         return (
                             <ListItemButton
                                 key={ result }

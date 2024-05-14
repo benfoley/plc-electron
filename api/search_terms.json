@@ -1,3 +1,10 @@
 {
-    "woman": ["frau", "femme", "donna", "mulher"]
-}
+    "woman": ["frau", "femme", "donna", "mulher"],
+    "boobook": ["bird"],
+    "pallid": ["bird"],
+    "baḏakawk": ["jungle-fowl", "bird"],
+    "Murnubbarr": ["magpie", "goose", "bird"],
+    "Buruŋgurr": ["pelican", "bird"],
+    "badama": ["shellfish", "edible", "fish"],
+    "balin": ["barramundi", "fish"]
+} 

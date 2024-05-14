@@ -5,6 +5,7 @@ import LoadingOverlay from 'react-loading-overlay-ts';
 
 function FilePanel({ path, sublist }) {
     const [ loading, setLoading ] = useState(false);
+    const [ image, setImage ] = useState('');
 
     const handleDownload = e => {
         setLoading(true);
@@ -26,7 +27,14 @@ function FilePanel({ path, sublist }) {
             })
         }                  
     }
-    
+    const handlePreview = e => {
+        fetch(`/preview/dropbox/${path}`, {method: "GET"})
+        .then(response => response.json())
+        .then(data => {
+            setImage(data.thumbnails)
+        })
+    }
+
     return (<>
         <div className='info'>
             <span className="textarea" role="textbox" >
@@ -39,6 +47,16 @@ function FilePanel({ path, sublist }) {
                 id="download-button"
                 onClick={ handleDownload }>Download</button>
         </LoadingOverlay>
+        <div>
+        <button className='preview'
+                disabled={sublist === 0}
+                id="preview-button"
+                onClick={ handlePreview }>Preview</button>
+        </div>
+        <div>
+            {image ? <img src={`data:image/png;base64,${image}`} alt="preview" /> : ''}
+        </div>
+
     </>);
 }
 
