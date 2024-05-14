@@ -121,6 +121,7 @@ function App() {
 
     return (<LoadingOverlay active={loading} spinner={loading}>
       <div className="App">
+        
         <header className="search">
           <SearchBar updateQuery={ setQuery } enabled={ !loading }/>
           <IconButton onClick={() => setSettingsIsActive(true)}>
@@ -134,8 +135,8 @@ function App() {
           <li>Excluded: {renderList(queryTranslation[0])}</li>
           <li>Included and optional: {renderList(queryTranslation[1])}</li>
         </div>
-        <div className="results-section">
 
+        <div className="results-section">
           <ResultsPanel className="results"
               results={ results }
               handleResultClick={ handleResultClick }/>

@@ -37,25 +37,28 @@ function FilePanel({ path, sublist }) {
 
     return (<>
         <div className='info'>
-            <span className="textarea" role="textbox" >
+            <div className="textarea" role="textbox" >
                 {path}
-            </span>
+            </div>
+            <div className='preview'>
+                {image ? <img src={`data:image/png;base64,${image}`} alt="preview" /> : ''}
+            </div>
         </div>
-        <LoadingOverlay active={loading} spinner={loading}>
-            <button className='download'
-                disabled={sublist === 0}
-                id="download-button"
-                onClick={ handleDownload }>Download</button>
-        </LoadingOverlay>
+
+        <div className='actions'>
         <div>
-        <button className='preview'
-                disabled={sublist === 0}
-                id="preview-button"
-                onClick={ handlePreview }>Preview</button>
+            <button className='action-button'
+                    disabled={sublist === 0}
+                    onClick={ handlePreview }>Preview</button>
+            </div>
+            <LoadingOverlay active={loading} spinner={loading}>
+                <button className='action-button'
+                    disabled={sublist === 0}
+                    onClick={ handleDownload }>Download</button>
+            </LoadingOverlay>
         </div>
-        <div>
-            {image ? <img src={`data:image/png;base64,${image}`} alt="preview" /> : ''}
-        </div>
+
+        
 
     </>);
 }

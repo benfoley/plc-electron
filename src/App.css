@@ -47,11 +47,11 @@
   grid-template-rows: 4fr 1fr;
   grid-template-areas:
     'results info'
-    'results download';
+    'results actions';
 }
 
 .results {
-  /* background-color: #ddffee #282c34; */
+  background-color: #ddffee #282c34;
   grid-area: results;
   margin: 1em 2em;
   padding: 0.5em;
@@ -62,18 +62,17 @@
 }
 
 .info {
-  /* background-color: bisque; */
+  background-color: bisque;
   grid-area: info;
   margin: 1em 2em;
   display: flex;
+  flex-direction: column;
 }
 
 .textarea {
   display: block;
   text-align: start;
-  width: 100%;
   overflow: hidden;
-  /* resize: both; */
   min-height: 40px;
   line-height: 20px;
   border: 1px solid darkgray;
@@ -81,12 +80,12 @@
   padding: 0.2em 0.5em;
 }
 
-.download {
-  grid-area: download;
+.actions {
+  grid-area: actions;
   margin: 1em;
 }
 
-#download-button {
+.action-button {
   font-size: large;
   padding: 0.7em;
   flex-basis: 100%;
