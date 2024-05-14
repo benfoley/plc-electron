@@ -24,6 +24,7 @@ function App() {
     // const [ selectedIndex, setSelectedIndex ] = useState(0);
     const [ selectedPath, setSelectedPath ] = useState("");
     const [ selectedSublist, setSelectedSublist ] = useState(3);
+    const [ selectedPreview, setSelectedPreview ] = useState(null);
     const [ loading, setLoading ] = useState(false);
 
     useEffect(() => {
@@ -102,8 +103,8 @@ function App() {
         prevResults += results[i].length;
       }
       
-    //   setSelectedIndex(index);
       setSelectedPath(newPath);
+      handlePreview(newPath);
 
       if (newList === 3) {
         console.error("invalid result list");
@@ -118,10 +119,18 @@ function App() {
         return ""
       }
     }
+    
+    const handlePreview = newPath => {
+      fetch(`/preview/dropbox/${newPath}`, {method: "GET"})
+      .then(response => response.json())
+      .then(data => {
+        setSelectedPreview(data.thumbnails);
+      })
+    }
 
     return (<LoadingOverlay active={loading} spinner={loading}>
       <div className="App">
-        
+
         <header className="search">
           <SearchBar updateQuery={ setQuery } enabled={ !loading }/>
           <IconButton onClick={() => setSettingsIsActive(true)}>
@@ -142,6 +151,7 @@ function App() {
               handleResultClick={ handleResultClick }/>
           <FilePanel
               path={ selectedPath }
+              preview={ selectedPreview }
               sublist={ selectedSublist }
               />
         </div>

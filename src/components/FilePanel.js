@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import '../App.css';
-
 import LoadingOverlay from 'react-loading-overlay-ts';
 
-function FilePanel({ path, sublist }) {
+function FilePanel({ path, preview, sublist }) {
     const [ loading, setLoading ] = useState(false);
-    const [ image, setImage ] = useState('');
 
     const handleDownload = e => {
         setLoading(true);
@@ -27,13 +24,6 @@ function FilePanel({ path, sublist }) {
             })
         }                  
     }
-    const handlePreview = e => {
-        fetch(`/preview/dropbox/${path}`, {method: "GET"})
-        .then(response => response.json())
-        .then(data => {
-            setImage(data.thumbnails)
-        })
-    }
 
     return (<>
         <div className='info'>
@@ -41,25 +31,17 @@ function FilePanel({ path, sublist }) {
                 {path}
             </div>
             <div className='preview'>
-                {image ? <img src={`data:image/png;base64,${image}`} alt="preview" /> : ''}
+                {preview ? <img src={`data:image/png;base64,${preview}`} alt="preview" /> : ''}
             </div>
         </div>
 
         <div className='actions'>
-        <div>
-            <button className='action-button'
-                    disabled={sublist === 0}
-                    onClick={ handlePreview }>Preview</button>
-            </div>
             <LoadingOverlay active={loading} spinner={loading}>
                 <button className='action-button'
                     disabled={sublist === 0}
                     onClick={ handleDownload }>Download</button>
             </LoadingOverlay>
         </div>
-
-        
-
     </>);
 }
 

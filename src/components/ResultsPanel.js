@@ -48,6 +48,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
         if (!(Array.isArray(results)) || results.length !== 3
             || results.some((sublist) => {return !Array.isArray(sublist)})) {
             console.error("error retrieving results");
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             temp = [(
                 <List component="nav" key="results-error">
                     <ListItemButton key="error" selected={ false }>
@@ -74,6 +75,5 @@ const ResultsPanel = ({ results, handleResultClick }) => {
         { children }
     </div>);
 }
-
 
 export default ResultsPanel;
