@@ -137,14 +137,17 @@ function App() {
         <LoadingOverlay active={loading} spinner={loading}>
             <div className="App">
                 <header className="search">
-                    <SearchBar updateQuery={setQuery} enabled={!loading} />
-                    <IconButton onClick={() => setSettingsIsActive(true)}>
-                        <SettingsIcon />
-                    </IconButton>
-                    <SettingsOverlay
-                        isActive={settingsIsActive}
-                        onClose={() => setSettingsIsActive(!settingsIsActive)}
-                    />
+                    <div>
+                        <SearchBar updateQuery={setQuery} enabled={!loading} />
+                        <IconButton onClick={() => setSettingsIsActive(true)}>
+                            <SettingsIcon />
+                        </IconButton>
+                        <SettingsOverlay
+                            isActive={settingsIsActive}
+                            onClose={() => setSettingsIsActive(!settingsIsActive)}
+                        />
+                    </div>
+
                     <div className="query-translated">
                         <p>Search explanation:</p>
                         <li>Excluded: {renderList(queryTranslation[0])}</li>

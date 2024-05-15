@@ -5,10 +5,6 @@
   padding: 2em;
 }
 
-.query-translated {
-  text-align: left;
-}
-
 .settings-background {
   background-color: rgba(0, 0, 0, 0.5);
   width: 100%;
@@ -37,7 +33,18 @@
   font-size: calc(10px + 2vmin);
   color: black;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+}
+
+
+.query-translated {
+  text-align: left;
+}
+
+.query-translated p,
+.query-translated li {
+    font-size: 16px;
 }
 
 .results-section {

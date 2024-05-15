@@ -26,14 +26,23 @@ flask --app api --debug run
 
 - replaced `react-loading-overlay` package with `react-loading-overlay-ts` for React 18 compatibility.
 
-### TODO 
-Change Flask port to 5001 for mac compatibility?
-Make api.py "../files" configuratble
-
-
 
 ### Dev
 
-Preview the app in a browser with `npm start`
+Preview the app in a browser with 
+```
+npm start
+```
 
-Run the Electron app `npm run dev`
+
+To run the Electron app
+```
+npm run dev
+```
+
+
+
+### TODO 
+Change Flask port to 5001 for mac compatibility?
+Make api.py "../files" configurable
+Make the Download button save to OS Downloads folder
