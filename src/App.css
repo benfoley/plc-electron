@@ -75,18 +75,19 @@
   overflow: hidden;
   min-height: 40px;
   line-height: 20px;
-  border: 1px solid darkgray;
+  /* border: 1px solid darkgray; */
   border-radius: 8px;
   padding: 0.2em 0.5em;
 }
 
 .actions {
   grid-area: actions;
-  margin: 1em;
+  margin: 1em 2em;
+  display:flex;
 }
 
 .action-button {
   font-size: large;
-  padding: 0.7em;
-  flex-basis: 100%;
+  height: 2em;
+  margin: 0 0.5em;
 }

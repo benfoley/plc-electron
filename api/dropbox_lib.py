@@ -53,7 +53,6 @@ def get_files(dbx: Dropbox, path="", recursive=True, include_folders=False) -> D
     print("Scanning for files")
     result = dbx.files_list_folder(path, recursive)
     files = process_folder_entries({}, result.entries, include_folders)
-
     while result.has_more:
         print("Collecting additional files")
         result = dbx.files_list_folder_continue(result.cursor)
@@ -135,6 +134,10 @@ def get_refresh_token(app_key):
     return refresh_token
 
 def get_dropbox(app_key=None, refresh_token=None, access_token=None):
+    print("app_key", app_key)
+    print("refresh_token", refresh_token)
+    print("access_token", access_token)
+    
     if app_key is None:
         app_key = os.getenv("APP_KEY")
     if app_key is not None:
@@ -191,15 +194,15 @@ def get_dropbox(app_key=None, refresh_token=None, access_token=None):
 #         # TODO throw exception? return None?
 #         return {}
 
-def search_files(dbx: Dropbox, query: str, all_files=None, path="", recursive=True) -> List[Metadata]:
-    include, exclude, optional = parse_query(query)
+# def search_files(dbx: Dropbox, query: str, all_files=None, path="", recursive=True) -> List[Metadata]:
+#     include, exclude, optional = parse_query(query)
 
-    # saves having to get all files every time
-    if not all_files:
-        all_files = get_files(dbx, path, recursive)
-    result = []
+#     # saves having to get all files every time
+#     if not all_files:
+#         all_files = get_files(dbx, path, recursive)
+#     result = []
 
-    for path_lower, metadata in all_files.items():
-        if string_fits_query(path_lower, include, exclude, optional):
-            result.append(metadata)
-    return result
+#     for path_lower, metadata in all_files.items():
+#         if string_fits_query(path_lower, include, exclude, optional):
+#             result.append(metadata)
+#     return result

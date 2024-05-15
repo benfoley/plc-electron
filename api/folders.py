@@ -211,6 +211,11 @@ def get_dropbox_thumbs(dbx, source: str):
     return entries
 
 
+def get_dropbox_link(dbx, source: str):
+    metadata = dbx.sharing_get_file_metadata(source)
+    link = metadata.preview_url
+    return link
+
 
 def translate_query(query: str, index_location: str) -> Tuple[List[str], List[str], List[str]]:    
     include, exclude, optional = parse_query(query)
@@ -253,6 +258,3 @@ def translate_query(query: str, index_location: str) -> Tuple[List[str], List[st
 # TODO put these somewhere else so they more obvious
 load_dotenv()
 index_location = "./search_terms.json"
-# dbx = get_dropbox(os.getenv("APP_KEY"), os.getenv("REFRESH_TOKEN"))
-# print(str(search_for_file("", dbx, "./files", buckets["ANNUAL"])))
-# get_files(dbx, os.path.join(os.path.sep, "Shared", "Folder C"))

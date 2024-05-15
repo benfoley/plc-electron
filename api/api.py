@@ -70,5 +70,6 @@ def preview_from_dropbox(filename=""):
     thumbnails = []
     entries = get_dropbox_thumbs(dbx, source)
     for entry in entries:
+        link = get_dropbox_link(dbx, source)
         thumbnails.append(entry.get_success().thumbnail  )
-    return {'status': 200, 'thumbnails': thumbnails}
+    return {'status': 200, 'thumbnails': thumbnails, 'link': link}

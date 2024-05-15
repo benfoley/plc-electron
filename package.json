@@ -50,7 +50,14 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.2.0",
     "concurrently": "^8.2.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.2.0",
+    "prettier": "^3.2.5",
     "wait-on": "^7.0.1"
   },
   "proxy": "http://localhost:5000"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LoadingOverlay from 'react-loading-overlay-ts';
 
-function FilePanel({ path, preview, sublist }) {
+function FilePanel({ path, preview, fileLink, sublist }) {
     const [ loading, setLoading ] = useState(false);
 
     const handleDownload = e => {
@@ -25,8 +25,16 @@ function FilePanel({ path, preview, sublist }) {
         }                  
     }
 
+    const openFileLink = e => {
+        if (fileLink)
+            window.open(fileLink, "_blank");
+        else 
+            console.log("no link");
+    }
+
     return (<>
         <div className='info'>
+            <h2>File info</h2>
             <div className="textarea" role="textbox" >
                 {path}
             </div>
@@ -41,6 +49,9 @@ function FilePanel({ path, preview, sublist }) {
                     disabled={sublist === 0}
                     onClick={ handleDownload }>Download</button>
             </LoadingOverlay>
+            <button className='action-button'
+                    disabled={sublist === 0}
+                    onClick={ openFileLink }>Open</button>
         </div>
     </>);
 }

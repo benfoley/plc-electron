@@ -72,6 +72,7 @@ const ResultsPanel = ({ results, handleResultClick }) => {
     }, [ results, selectedIndex ])
 
     return (<div className="results">
+        <h2>Files</h2>
         { children }
     </div>);
 }
