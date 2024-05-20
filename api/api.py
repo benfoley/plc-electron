@@ -2,7 +2,12 @@ from flask import Flask
 from folders import *
 
 app = Flask(__name__)
+
 dbx = get_dropbox(os.getenv("APP_KEY"), os.getenv("REFRESH_TOKEN"))
+
+@app.route("/")
+def home():
+  return "app home"
 
 @app.route('/get_all_files')
 def get_all_files():
@@ -73,3 +78,7 @@ def preview_from_dropbox(filename=""):
         link = get_dropbox_link(dbx, source)
         thumbnails.append(entry.get_success().thumbnail  )
     return {'status': 200, 'thumbnails': thumbnails, 'link': link}
+
+
+if __name__ == "__main__":
+    app.run(port=5000, debug=True)
